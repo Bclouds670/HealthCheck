@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: livens
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mylabel
+  template:
+    metadata:
+      labels:
+        app: mylabel
+    spec:
+      containers:
+        - name: mycontainer
+          image: nginx
+          ports:
+            - containerPort: 80
+          command: ["sh","-c", "sleep 2 && nginx -g 'deamon off'"]
+          startupProbe:
+            httpGet:
+              path: /index.html
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
